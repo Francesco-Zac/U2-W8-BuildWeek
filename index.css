@@ -1,0 +1,100 @@
+/* Reset base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #121212;
+  color: #ffffff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: #000;
+}
+.navbar .logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 32px;
+}
+.navbar nav a {
+  margin-right: 16px;
+  font-size: 14px;
+}
+
+/* Sezione principale */
+main {
+  padding: 24px 24px 80px; /* bottom padding per non finire sotto il player */
+}
+
+/* Titolo di striscia */
+.section-title {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+/* Riga orizzontale scrollabile */
+.album-row {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 32px;
+  scrollbar-width: none;
+}
+.album-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Singolo album cliccabile */
+.album-item {
+  flex: 0 0 auto;
+  width: 140px;
+  margin-right: 16px;
+  text-align: center;
+  cursor: pointer; /* mano al passaggio */
+  transition: transform 0.2s ease;
+}
+.album-item:hover {
+  transform: scale(1.05);
+}
+.album-item img {
+  width: 100%;
+  border-radius: 4px;
+}
+.album-item .album-title {
+  font-size: 14px;
+  margin-top: 8px;
+  line-height: 1.2;
+  height: 2.4em; /* due righe */
+  overflow: hidden;
+}
+.album-item .artist-name {
+  font-size: 12px;
+  color: #b3b3b3;
+  margin-top: 4px;
+}
+
+/* Player audio fisso in basso */
+#player-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #282828;
+  padding: 8px 16px;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.5);
+}
+#audio-player {
+  width: 100%;
+}
