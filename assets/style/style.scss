@@ -1,0 +1,26 @@
+@import "./partials/bootstrap-overrides.scss";
+#playlist {
+  overflow: scroll;
+}
+svg {
+  width: 1rem;
+  fill: $light;
+}
+#track-time,
+#track-max {
+  font-size: 12px;
+}
+#play-title {
+  font-size: 19px;
+}
+#play-artist {
+  font-size: 1rem;
+}
+#play-title:hover,
+#play-artist:hover {
+  text-decoration-color: white !important;
+}
+
+.svgFill {
+  fill: #1ed760;
+}
