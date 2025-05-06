@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Album page</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  </head>
+  <body>
+    <main>
+      <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Spotify</a>
+          <div>
+            <button class="btn btn-outline-light me-2">Sign Up</button>
+            <button class="btn btn-light">Log In</button>
+          </div>
+        </div>
+      </nav>
+      <section class="bg-dark text-light py-5">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-4">
+              <img src="https://assets.turbologo.com/blog/it/2025/01/08101707/Rammstein-958x575-1.png" alt="Rammstein" class="img-fluid" />
+            </div>
+            <div class="col-md-8">
+              <h1 class="display-4 fw-bold">Mutter</h1>
+              <p class="lead">Rammstein</p>
+              <button class="btn btn-success btn-lg rounded-circle"><i class="fas fa-play"></i></button>
+              <button class="btn btn-lg text-secondary"><i class="far fa-heart fa-lg"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="py-4">
+        <div class="container">
+          <h2 class="mb-4">Tracks</h2>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold">Titolo</span>
+            <span class="fw-bold">Riproduzioni</span>
+            <span class="fw-bold">Orologio</span>
+          </div>
+          <ul class="list-unstyled">
+            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+              <span>1. Mein Herz Brennt</span>
+              <span>1,234,567</span>
+              <span>4:40</span>
+            </li>
+            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+              <span>2. Links 2-3-4</span>
+              <span>987,654</span>
+              <span>3:36</span>
+            </li>
+            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+              <span>3. Sonne</span>
+              <span>1,543,210</span>
+              <span>4:32</span>
+            </li>
+            <li class="d-flex justify-content-between align-items-center py-2">
+              <span>4. Ich Will</span>
+              <span>876,543</span>
+              <span>3:37</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./assets/js/albumpage.js"></script>
+    <script src="./assets/js/token.js"></script>
+  </body>
+</html>
