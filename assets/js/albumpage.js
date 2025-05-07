@@ -25,6 +25,7 @@ if (albumId) {
       album.tracks.data.forEach((track) => {
         const li = document.createElement("li");
         li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.style.backgroundColor = "inherit";
 
         const minutes = Math.floor(track.duration / 60);
         const seconds = track.duration % 60;
