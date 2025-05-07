@@ -10,6 +10,7 @@
       integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="./assets/css/albumpage.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   </head>
   <body>
@@ -21,29 +22,49 @@
         </div>
       </nav>
 
-      <section class="py-4">
+      <section class="py-4" id="album-section">
         <div class="container">
-          <div class="row"></div>
-          <!-- Album Info -->
-          <div class="col-md-4 text-center">
-            <img id="clicked-album-cover" src="" class="img-fluid rounded mb-3" alt="Album Cover" />
-            <h2 id="clicked-album-title" class="text-light">Titolo Album</h2>
-            <p id="clicked-album-artist" class="text-muted">Artista</p>
+          <div class="row align-items-center">
+            <div class="col-md-4 text-center">
+              <img id="clicked-album-cover" src="" class="img-fluid rounded mb-3" alt="Album Cover" />
+            </div>
+
+            <div class="col-md-8">
+              <h2 id="clicked-album-title" class="text-light">Titolo Album</h2>
+              <p id="clicked-album-artist" class="text-muted">Artista</p>
+            </div>
           </div>
-          <!-- Tracks List -->
-          <div class="col-md-8">
-            <h4 class="text-light mb-3">Tracks</h4>
-            <ul id="clicked-album-tracks" class="list-group list-group-flush">
-              <!-- Le tracce dell'album cliccato verranno aggiunte dinamicamente qui -->
-            </ul>
+          <div>
+            <button id="play-album-btn" class="btn btn-success btn-lg"><i class="fas fa-play me-2"></i></button>
+            <button id="add-to-favorites-btn" class="btn btn-warning btn-lg"><i class="fas fa-plus-circle"></i></button>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <h4 class="text-light mb-3">Tracks</h4>
+              <ul id="clicked-album-tracks" class="list-group list-group-flush"></ul>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
     <footer class="bg-dark text-light py-4">
-      <div class="container text-center">
-        <p>&copy; 2025 Spotify . All rights reserved.</p>
+      <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <div class="d-flex flex-wrap mb-3 mb-md-0">
+          <ul class="list-unstyled d-flex flex-wrap mb-0">
+            <li class="me-3"><a href="#" class="text-light text-decoration-none">Legal</a></li>
+            <li class="me-3"><a href="#" class="text-light text-decoration-none">Privacy Center</a></li>
+            <li class="me-3"><a href="#" class="text-light text-decoration-none">Privacy Policy</a></li>
+            <li class="me-3"><a href="#" class="text-light text-decoration-none">Cookies</a></li>
+            <li class="me-3"><a href="#" class="text-light text-decoration-none">About Ads</a></li>
+            <li><a href="#" class="text-light text-decoration-none">Accessibility</a></li>
+          </ul>
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="fab fa-spotify fa-2x me-2"></i>
+          <p class="mb-0">&copy; 2025 Spotify</p>
+        </div>
       </div>
     </footer>
 

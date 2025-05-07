@@ -16,7 +16,6 @@ if (albumId) {
       const response = await fetch(url, options);
       const album = await response.json();
 
-      // Aggiorna dinamicamente il contenuto della pagina
       document.getElementById("clicked-album-title").textContent = album.title;
       document.getElementById("clicked-album-cover").src = album.cover_big;
       document.getElementById("clicked-album-artist").textContent = album.artist.name;
@@ -25,9 +24,31 @@ if (albumId) {
       trackList.innerHTML = "";
       album.tracks.data.forEach((track) => {
         const li = document.createElement("li");
-        li.className = "list-group-item";
-        li.textContent = `${track.title} (${track.duration}s)`;
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+
+        const minutes = Math.floor(track.duration / 60);
+        const seconds = track.duration % 60;
+        const formattedDuration = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+        li.textContent = track.title;
+
+        const durationSpan = document.createElement("span");
+        durationSpan.className = "badge bg-secondary rounded-pill";
+        durationSpan.textContent = formattedDuration;
+
+        li.appendChild(durationSpan);
         trackList.appendChild(li);
+      });
+      // Aggiungi funzionalità al pulsante Play
+      const playButton = document.getElementById("play-album-btn");
+      playButton.addEventListener("click", () => {
+        if (album.tracks.data.length > 0) {
+          const firstTrackPreview = album.tracks.data[0].preview;
+          const audioPlayer = new Audio(firstTrackPreview);
+          audioPlayer.play();
+        } else {
+          alert("No preview available for this album.");
+        }
       });
     } catch (error) {
       console.error("Errore nel recupero dei dati dell'album:", error);
