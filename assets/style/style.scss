@@ -1,11 +1,80 @@
 @import "./partials/bootstrap-overrides.scss";
-#playlist {
-  overflow: scroll;
+
+aside {
+  background-color: #121212;
+  color: white;
+  height: 100%;
+}
+.bg-new {
+  background-color: #292929 !important;
+}
+.text-new {
+  color: #b3b3b3 !important;
+}
+#install-btn:hover {
+  svg {
+    fill: white !important;
+  }
+  div {
+    color: white !important;
+  }
+}
+.mark:hover {
+  background-color: #424242 !important;
+}
+.search-nav-focus {
+  border: 2px solid white;
+}
+.nav-btn {
+  width: 48px;
+  height: 48px;
+  background-color: #292929 !important;
+}
+.nav-btn:hover {
+  width: 48px;
+  height: 48px;
+  background-color: #424242 !important;
+  svg {
+    fill: white;
+  }
+}
+#src-nav-form {
+  width: 310px;
+}
+
+#searchbar {
+  background-color: #292929;
+}
+#playlist,
+#frend {
+  overflow: auto;
+  height: 100vh;
 }
 svg {
   width: 1rem;
-  fill: $light;
+  fill: #b3b3b3;
 }
+.pop:hover {
+  transform: scale(1.05);
+}
+
+svg:hover {
+  transform: scale(1.05);
+  fill: white;
+}
+#src-library {
+  width: 65%;
+}
+#src-library input {
+  font-size: 12px;
+}
+input[type="search"]:focus {
+  box-shadow: none;
+}
+.library-card:hover {
+  background-color: #424242;
+}
+
 #track-time,
 #track-max {
   font-size: 12px;
@@ -22,5 +91,5 @@ svg {
 }
 
 .svgFill {
-  fill: #1ed760;
+  fill: #1ed760 !important;
 }

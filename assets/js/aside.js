@@ -1,23 +1,60 @@
-menuBtn = document.getElementById("menu-btn");
-menuDrop = document.getElementById("menu-dropdown");
-rowFrend = document.getElementById("frend-card");
-pause = document.querySelector(".bi-pause-circle-fill");
-play = document.querySelector(".bi-play-circle-fill");
-playBtn = document.getElementById("play-btn");
-heartBtn = document.getElementById("heart-btn");
-heart = document.querySelector(".bi-heart-fill");
-svg = document.querySelectorAll(".navbar svg");
-volumeIcone = document.getElementById("volume-icon");
-volumeMute = document.getElementById("volume-mute");
-volumeBtn = document.getElementById("volume-btn");
-volumeBar = document.getElementById("volume-bar");
+const pause = document.querySelector(".bi-pause-circle-fill");
+const play = document.querySelector(".bi-play-circle-fill");
+const playBtn = document.getElementById("play-btn");
+const heartBtn = document.getElementById("heart-btn");
+const heart = document.querySelector(".bi-heart-fill");
+const svg = document.querySelectorAll(".navbar svg");
+const volumeIcone = document.getElementById("volume-icon");
+const volumeMute = document.getElementById("volume-mute");
+const volumeBtn = document.getElementById("volume-btn");
+const volumeBar = document.getElementById("volume-bar");
+const srcDiv = document.getElementById("src-library");
+const srcBtn = document.getElementById("src-library-btn");
+const srcInput = document.getElementById("src-input");
+const srcNav = document.getElementById("search-nav");
+const libCloser = document.getElementById("library-closer");
+const leftOpen = document.getElementById("left-open");
+const right = document.getElementById("right");
+const center = document.getElementById("center");
+const notify = document.getElementById("notify");
 
 heartBtn.onclick = function () {
   heart.classList.toggle("opacity-0");
 };
-menuBtn.onclick = function () {
-  menuDrop.classList.toggle("d-none");
+
+leftOpen.onmouseover = function () {
+  libCloser.classList.remove("d-none");
 };
+leftOpen.onmouseout = function () {
+  libCloser.classList.add("d-none");
+};
+
+notify.onclick = function () {
+  right.classList.toggle("d-none");
+  if (leftOpen.classList.contains("d-none")) {
+    center.classList.toggle("col-12");
+  } else {
+    center.classList.toggle("col-9");
+  }
+};
+libCloser.onclick = function () {
+  leftOpen.classList.toggle("d-none");
+  if (right.classList.contains("d-none")) {
+    center.classList.toggle("col-12");
+  } else {
+    center.classList.toggle("col-9");
+  }
+};
+srcBtn.onclick = function () {
+  srcDiv.classList.toggle("bg-new");
+};
+srcInput.onfocus = function () {
+  srcNav.classList.add("search-nav-focus");
+};
+srcInput.onblur = function () {
+  srcNav.classList.remove("search-nav-focus");
+};
+
 playBtn.onclick = function () {
   play.classList.toggle("d-none");
   pause.classList.toggle("d-none");
@@ -37,36 +74,66 @@ svg.forEach((s) => {
 });
 
 // creazione frend card
-frendCardGen = function () {
-  frendCard = document.createElement("div");
-  imgCol = document.createElement("div");
-  frendImg = document.createElement("img");
-  frendText = document.createElement("div");
-  frendName = document.createElement("h5");
-  frendTrack = document.createElement("p");
-  frendAlbum = document.createElement("p");
-  frendTime = document.createElement("div");
-  timeText = document.createElement("p");
+const cardGen = function (v, data) {
+  const card = document.createElement("il");
+  const cardDiv = document.createElement("div");
+  const imgDiv = document.createElement("div");
+  const cardImg = document.createElement("img");
+  const cardText = document.createElement("div");
+  const cardTrack = document.createElement("span");
+  const cardAlbum = document.createElement("span");
 
-  frendCard.classList.add("row", "text-secondary");
-  frendImg.classList.add("rounded-circle");
-  frendText.classList.add("col-8");
-  imgCol.classList.add("col-2");
-  frendTime.classList.add("col-2");
-  frendImg.src = "./assets/img/image-2.jpg";
-  frendImg.style.width = "10px";
-  frendName.innerText = "name";
-  frendTrack.innerText = "track";
-  frendAlbum.innerText = "album";
-  timeText.innerText = "time";
+  card.classList.add("rounded-2", "p-2");
+  cardDiv.classList.add("d-flex", "align-items-center", "gap-1");
+  cardImg.classList.add("rounded-circle");
+  cardImg.style.width = "48px";
+  cardText.classList.add("d-flex", "flex-column", "ms-2");
+  cardTrack.style.fontSize = "14px";
+  cardAlbum.style.fontSize = "12px";
 
-  frendText.appendChild(frendName);
-  frendText.appendChild(frendTrack);
-  frendText.appendChild(frendAlbum);
-  frendTime.appendChild(timeText);
-  imgCol.appendChild(frendImg);
-  frendCard.appendChild(imgCol);
-  frendCard.appendChild(frendText);
-  frendCard.appendChild(frendTime);
-  rowFrend.appendChild(frendCard);
+  cardImg.src = data.album.cover_small;
+  cardTrack.innerText = data.title;
+  cardAlbum.innerText = data.album.title;
+
+  if (v) {
+    const playlist = document.getElementById("playlist");
+
+    card.classList.add("library-card");
+    imgDiv.appendChild(cardImg);
+    cardText.appendChild(cardTrack);
+    cardText.appendChild(cardAlbum);
+    cardDiv.appendChild(imgDiv);
+    cardDiv.appendChild(cardText);
+    card.appendChild(cardDiv);
+    playlist.appendChild(card);
+  } else {
+    const frends = document.getElementById("frend");
+    card.classList.add("frend-card");
+    cardDiv.classList.remove("align-items-center");
+
+    const cardTime = document.createElement("div");
+    cardTime.classList.add("ms-auto", "flex-shrink-0");
+    const timeText = document.createElement("span");
+    const cardName = document.createElement("span");
+    cardName.style.fontSize = "14px";
+    cardTrack.style.fontSize = "12px";
+    timeText.style.fontSize = "10px";
+
+    cardImg.src = data.album.cover_small;
+    cardName.innerText = "sbabulli";
+    timeText.innerText = "8 min";
+    cardTrack.innerHTML = `${data.title}<i class="bi bi-dot"></i>${data.artist.name} `;
+    cardAlbum.innerHTML = `<i class="bi bi-disc"></i> ${data.album.title}`;
+
+    imgDiv.appendChild(cardImg);
+    cardTime.appendChild(timeText);
+    cardText.appendChild(cardName);
+    cardText.appendChild(cardTrack);
+    cardText.appendChild(cardAlbum);
+    cardDiv.appendChild(imgDiv);
+    cardDiv.appendChild(cardText);
+    cardDiv.appendChild(cardTime);
+    card.appendChild(cardDiv);
+    frends.appendChild(card);
+  }
 };
