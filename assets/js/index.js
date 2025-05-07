@@ -1,5 +1,3 @@
-// assets/js/index.js
-
 const API_URL = "https://deezerdevs-deezer.p.rapidapi.com/search";
 const API_HEADERS = {
   "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com",
@@ -11,7 +9,7 @@ const trendingArtists = ["Lazza", "Damiano David", "Fedez", "CLARA", "Tredici Pi
 const popularArtists = ["Sfera Ebbasta", "Guè", "Olly", "Marracash", "Achille Lauro", "Lazza", "Cesare Cremonini", "Geolier"];
 const popularAlbums = ["Daft Punk", "Adele", "Coldplay", "Drake", "Taylor Swift"];
 
-// Dati di fallback (o mock) in caso di errori o rate‑limit
+// Dati di fallback in caso di errori o rate‑limit
 const sampleData = {
   artists: [
     { name: "Sfera Ebbasta", picture_medium: "/api/placeholder/300/300?text=Sfera+Ebbasta" },
@@ -124,9 +122,6 @@ async function loadTrendingTracks() {
       const mock = sampleData.tracks.find((t) => t.artist.name === artist) || sampleData.tracks[0];
       container.appendChild(createTrackCard(mock));
     }
-
-    // piccolo delay per non sforare i limiti
-    await new Promise((r) => setTimeout(r, 10));
   }
 }
 
@@ -175,22 +170,25 @@ async function loadPopularAlbums() {
 
       const { data } = await res.json();
       if (data && data.length > 0) {
-        // data[0] è una traccia, che include track.album e track.artist
-        container.appendChild(createAlbumCard(data[0]));
+        const albumData = {
+          id: data[0].album.id,
+          album: data[0].album,
+          artist: data[0].artist,
+        };
+        container.appendChild(createAlbumCard(albumData));
       } else {
         throw new Error("Nessun dato");
       }
     } catch (err) {
       console.warn(`Fallback album per ${query}:`, err);
       const mock = sampleData.albums.find((a) => a.artist.name === query) || sampleData.albums[0];
+      mock.id = Math.floor(Math.random() * 1000000); // ID casuale per i dati di fallback
       container.appendChild(createAlbumCard(mock));
     }
 
     await new Promise((r) => setTimeout(r, 300));
   }
 }
-
-// —–––––— helper per le card (restano identiche) —–––––—
 
 function createTrackCard(track) {
   const item = document.createElement("div");
@@ -202,7 +200,6 @@ function createTrackCard(track) {
     }
   });
 
-  // cover o fallback
   if (track.album.cover_medium) {
     const img = document.createElement("img");
     img.src = track.album.cover_medium;
@@ -278,15 +275,16 @@ function createArtistCard(artist) {
   return item;
 }
 
-function createAlbumCard(track) {
-  const album = track.album;
+function createAlbumCard(data) {
+  const album = data.album;
+  const albumId = data.id;
   const item = document.createElement("div");
   item.className = "album-item";
+  item.dataset.albumId = albumId; // Memorizza l'ID dell'album nell'elemento HTML
+
   item.addEventListener("click", () => {
-    if (track.preview && audioPlayer.src !== track.preview) {
-      audioPlayer.src = track.preview;
-      audioPlayer.play();
-    }
+    // Reindirizza alla pagina dell'album passando l'ID
+    window.location.href = `albumpage.html?id=${albumId}`;
   });
 
   if (album.cover_medium) {
@@ -298,7 +296,7 @@ function createAlbumCard(track) {
   } else {
     const fallback = document.createElement("div");
     fallback.className = "album-cover cover-fallback";
-    const hash = simpleHash(track.artist.name + album.title);
+    const hash = simpleHash(data.artist.name + album.title);
     fallback.style.backgroundColor = `hsl(${hash % 360}, 70%, 60%)`;
     const initials = album.title
       .split(" ")
@@ -311,13 +309,15 @@ function createAlbumCard(track) {
   const titleDiv = document.createElement("div");
   titleDiv.className = "album-title";
   titleDiv.textContent = album.title;
+
   const artistDiv = document.createElement("div");
   artistDiv.className = "artist-name";
-  artistDiv.textContent = track.artist.name;
+  artistDiv.textContent = data.artist.name;
   artistDiv.style.cursor = "pointer";
+
   artistDiv.addEventListener("click", (e) => {
     e.stopPropagation();
-    window.location.href = `artistpage.html?artist=${encodeURIComponent(track.artist.name)}`;
+    window.location.href = `artistpage.html?artist=${encodeURIComponent(data.artist.name)}`;
   });
 
   item.append(titleDiv, artistDiv);

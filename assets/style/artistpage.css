@@ -1,92 +1,290 @@
-/* resettino di base */
+/* Reset base */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-body {
-  background-color: #121212;
-  color: #fff;
-  font-family: sans-serif;
-  min-height: 100vh;
-  padding-bottom: 4rem; /* spazio per il player */
-}
-#artist-header {
-  display: flex;
-  align-items: center;
-}
-#banner {
-  width: 300px;
-  height: 300px;
-  background-color: #1e1e1e;
-  background-size: cover;
-  background-position: center;
-}
-#artist-info {
-  margin-left: 1.5rem;
-}
-#artist-info h1 {
-  font-size: 2rem;
-}
-#artist-info p {
-  margin: 0.5rem 0;
-  color: #b3b3b3;
-}
-#artist-info button {
-  background: none;
-  border: 1px solid #fff;
-  color: #fff;
-  padding: 0.4rem 1rem;
-  cursor: pointer;
-}
-#artist-info button:hover {
-  background: #1db954;
-  border-color: #1db954;
-}
-#top-tracks {
-  margin-top: 2rem;
-}
-#top-tracks h2 {
-  margin-bottom: 1rem;
-}
-#tracks-container .track {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #282828;
-  cursor: pointer;
-}
-#tracks-container .track:hover {
-  background: #282828;
-}
-#player-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #181818;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
-}
-#audio-player {
-  width: 100%;
-}
 
 body {
   background-color: #121212;
   color: #fff;
+  font-family: "Circular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  padding-bottom: 4rem;
 }
+
+/* Navbar */
+.navbar {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.search-input {
+  background-color: #242424;
+  color: white;
+  border: none;
+  border-radius: 20px;
+}
+
+/* Banner artista */
+#artist-header {
+  width: 100%;
+}
+
 #banner {
+  width: 100%;
+  height: 350px;
+  background-color: #1e1e1e;
+  background-size: cover;
+  background-position: center 30%;
+  position: relative;
+}
+
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+.artist-info-container {
+  position: absolute;
+  bottom: 40px;
+  left: 24px;
+  z-index: 2;
+}
+
+.verification-badge {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #3d91f4;
+  font-size: 14px;
+}
+
+.verification-badge i {
+  margin-right: 6px;
+}
+
+#artist-name {
+  font-size: 6rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+.monthly-listeners {
+  font-size: 1rem;
+  color: #b3b3b3;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.play-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #1db954;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.play-button i {
+  font-size: 24px;
+}
+
+.play-button:hover {
+  transform: scale(1.05);
+  background-color: #1ed760;
+}
+
+.follow-button {
+  background: transparent;
+  border: 1px solid #727272;
+  color: white;
+  border-radius: 20px;
+  padding: 7px 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.follow-button:hover {
+  border-color: white;
+  transform: scale(1.02);
+}
+
+.more-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: #b3b3b3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.more-button:hover {
+  color: white;
+}
+
+.content-section {
+  margin-bottom: 40px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.tracks-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-item {
+  display: grid;
+  grid-template-columns: 40px 1fr auto auto;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.track-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.track-number {
+  color: #b3b3b3;
+  font-weight: 500;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+  padding-left: 16px;
+}
+
+.track-title {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.track-artist {
+  font-size: 14px;
+  color: #b3b3b3;
+}
+
+.track-plays {
+  color: #b3b3b3;
+  font-size: 14px;
+  margin-right: 24px;
+}
+
+.track-duration {
+  color: #b3b3b3;
+  font-size: 14px;
+}
+
+.playlists-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+}
+
+.playlist-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 16px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.playlist-card:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.playlist-image {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 4px;
+  margin-bottom: 12px;
   background-size: cover;
   background-position: center;
-  height: 300px;
 }
-.track-item:hover {
-  background-color: #1e1e1e;
+
+.playlist-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
+.playlist-description {
+  font-size: 14px;
+  color: #b3b3b3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  #artist-name {
+    font-size: 3rem;
+  }
+
+  .playlists-container {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+/* Messaggi di errore */
 .error {
   color: #f44336;
   text-align: center;
   margin-top: 2rem;
+  padding: 1rem;
+  background: rgba(244, 67, 54, 0.1);
+  border-radius: 4px;
+}
+
+/* Etichette E per contenuti espliciti */
+.explicit-label {
+  background-color: rgba(255, 255, 255, 0.6);
+  color: #121212;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 2px;
+  margin-left: 8px;
 }
