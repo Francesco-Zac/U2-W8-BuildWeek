@@ -1,4 +1,3 @@
-// Ottieni l'ID dalla query string dell'URL
 const params = new URLSearchParams(window.location.search);
 const albumId = params.get("id");
 
@@ -23,7 +22,7 @@ if (albumId) {
       document.getElementById("clicked-album-artist").textContent = album.artist.name;
 
       const trackList = document.getElementById("clicked-album-tracks");
-      trackList.innerHTML = ""; // Pulisce la lista prima di aggiungere nuovi elementi
+      trackList.innerHTML = "";
       album.tracks.data.forEach((track) => {
         const li = document.createElement("li");
         li.className = "list-group-item";
