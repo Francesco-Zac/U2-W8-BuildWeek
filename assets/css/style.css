@@ -11965,13 +11965,67 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
-#playlist {
-  overflow: scroll;
+aside {
+  background-color: #121212;
+  color: white;
+  height: 100%;
+}
+
+.bg-new {
+  background-color: #292929 !important;
+}
+
+.mark:hover {
+  background-color: #424242 !important;
+}
+
+.search-nav-focus {
+  border: 2px solid white;
+}
+
+.nav-btn {
+  width: 48px;
+  height: 48px;
+  background-color: #292929 !important;
+}
+
+.nav-btn:hover {
+  width: 48px;
+  height: 48px;
+  background-color: #424242 !important;
+}
+.nav-btn:hover svg {
+  fill: white;
+}
+
+#src-nav-form {
+  width: 310px;
+}
+
+#searchbar {
+  background-color: #292929;
 }
 
 svg {
   width: 1rem;
-  fill: #f8f9fa;
+  fill: #b3b3b3;
+}
+
+svg:hover {
+  transform: scale(1.05);
+  fill: white;
+}
+
+#src-library {
+  width: 80%;
+}
+
+input[type=search]:focus {
+  box-shadow: none;
+}
+
+.library-card:hover {
+  background-color: #424242;
 }
 
 #track-time,
@@ -11993,5 +12047,5 @@ svg {
 }
 
 .svgFill {
-  fill: #1ed760;
+  fill: #1ed760 !important;
 }/*# sourceMappingURL=style.css.map */
