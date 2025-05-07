@@ -4,6 +4,7 @@ body {
   color: white;
   text-align: center;
   margin: 0;
+  overflow-x: hidden;
 }
 
 .container {
@@ -14,14 +15,17 @@ body {
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adatta le card su tutta la larghezza */
+  grid-template-columns: repeat(auto-fit, minmax(24%, 1fr));
   gap: 15px;
+  margin: 5rem;
+  justify-items: stretch;
 }
 
 .card {
   width: 100%;
   height: 80px; /* Altezza più corta */
-  background-color: #333;
+  background: #de2626;
+  background: linear-gradient(171deg, rgba(222, 38, 38, 1) 0%, rgba(87, 121, 199, 1) 50%, rgba(255, 229, 0, 1) 100%);
   border-radius: 10px;
   padding: 30px;
   position: relative;
