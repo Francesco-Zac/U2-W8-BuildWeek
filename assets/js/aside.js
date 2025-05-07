@@ -1,4 +1,3 @@
-const rowFrend = document.getElementById("frend-card");
 const pause = document.querySelector(".bi-pause-circle-fill");
 const play = document.querySelector(".bi-play-circle-fill");
 const playBtn = document.getElementById("play-btn");
@@ -13,10 +12,38 @@ const srcDiv = document.getElementById("src-library");
 const srcBtn = document.getElementById("src-library-btn");
 const srcInput = document.getElementById("src-input");
 const srcNav = document.getElementById("search-nav");
-const playlist = document.getElementById("palylist");
+const libCloser = document.getElementById("library-closer");
+const leftOpen = document.getElementById("left-open");
+const right = document.getElementById("right");
+const center = document.getElementById("center");
+const notify = document.getElementById("notify");
 
 heartBtn.onclick = function () {
   heart.classList.toggle("opacity-0");
+};
+
+leftOpen.onmouseover = function () {
+  libCloser.classList.remove("d-none");
+};
+leftOpen.onmouseout = function () {
+  libCloser.classList.add("d-none");
+};
+
+notify.onclick = function () {
+  right.classList.toggle("d-none");
+  if (leftOpen.classList.contains("d-none")) {
+    center.classList.toggle("col-12");
+  } else {
+    center.classList.toggle("col-9");
+  }
+};
+libCloser.onclick = function () {
+  leftOpen.classList.toggle("d-none");
+  if (right.classList.contains("d-none")) {
+    center.classList.toggle("col-12");
+  } else {
+    center.classList.toggle("col-9");
+  }
 };
 srcBtn.onclick = function () {
   srcDiv.classList.toggle("bg-new");
@@ -47,17 +74,14 @@ svg.forEach((s) => {
 });
 
 // creazione frend card
-const cardGen = function (track, album) {
+const cardGen = function (v, data) {
   const card = document.createElement("il");
   const cardDiv = document.createElement("div");
   const imgDiv = document.createElement("div");
   const cardImg = document.createElement("img");
   const cardText = document.createElement("div");
-  //  const  cardName = document.createElement("span");
   const cardTrack = document.createElement("span");
   const cardAlbum = document.createElement("span");
-  //   const cardTime = document.createElement("div");
-  //   const timeText = document.createElement("p");
 
   card.classList.add("rounded-2", "p-2");
   cardDiv.classList.add("d-flex", "align-items-center", "gap-1");
@@ -67,20 +91,49 @@ const cardGen = function (track, album) {
   cardTrack.style.fontSize = "14px";
   cardAlbum.style.fontSize = "12px";
 
-  cardImg.src = "./assets/img/image-2.jpg";
-  cardTrack.innerText = track;
-  cardAlbum.innerText = album;
+  cardImg.src = data.album.cover_small;
+  cardTrack.innerText = data.title;
+  cardAlbum.innerText = data.album.title;
 
-  const playlist = document.getElementById("palylist");
+  if (v) {
+    const playlist = document.getElementById("playlist");
 
-  card.classList.add("library-card");
-  imgDiv.appendChild(cardImg);
-  cardText.appendChild(cardTrack);
-  cardText.appendChild(cardAlbum);
-  cardDiv.appendChild(imgDiv);
-  cardDiv.appendChild(cardText);
-  card.appendChild(cardDiv);
-  playlist.appendChild(card);
+    card.classList.add("library-card");
+    imgDiv.appendChild(cardImg);
+    cardText.appendChild(cardTrack);
+    cardText.appendChild(cardAlbum);
+    cardDiv.appendChild(imgDiv);
+    cardDiv.appendChild(cardText);
+    card.appendChild(cardDiv);
+    playlist.appendChild(card);
+  } else {
+    const frends = document.getElementById("frend");
+    card.classList.add("frend-card");
+    cardDiv.classList.remove("align-items-center");
+
+    const cardTime = document.createElement("div");
+    cardTime.classList.add("ms-auto", "flex-shrink-0");
+    const timeText = document.createElement("span");
+    const cardName = document.createElement("span");
+    cardName.style.fontSize = "14px";
+    cardTrack.style.fontSize = "12px";
+    timeText.style.fontSize = "10px";
+
+    cardImg.src = data.album.cover_small;
+    cardName.innerText = "sbabulli";
+    timeText.innerText = "8 min";
+    cardTrack.innerHTML = `${data.title}<i class="bi bi-dot"></i>${data.artist.name} `;
+    cardAlbum.innerHTML = `<i class="bi bi-disc"></i> ${data.album.title}`;
+
+    imgDiv.appendChild(cardImg);
+    cardTime.appendChild(timeText);
+    cardText.appendChild(cardName);
+    cardText.appendChild(cardTrack);
+    cardText.appendChild(cardAlbum);
+    cardDiv.appendChild(imgDiv);
+    cardDiv.appendChild(cardText);
+    cardDiv.appendChild(cardTime);
+    card.appendChild(cardDiv);
+    frends.appendChild(card);
+  }
 };
-
-cardGen("canzone", "nuova");

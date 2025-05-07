@@ -11975,6 +11975,17 @@ aside {
   background-color: #292929 !important;
 }
 
+.text-new {
+  color: #b3b3b3 !important;
+}
+
+#install-btn:hover svg {
+  fill: white !important;
+}
+#install-btn:hover div {
+  color: white !important;
+}
+
 .mark:hover {
   background-color: #424242 !important;
 }
@@ -12006,9 +12017,19 @@ aside {
   background-color: #292929;
 }
 
+#playlist,
+#frend {
+  overflow: auto;
+  height: 100vh;
+}
+
 svg {
   width: 1rem;
   fill: #b3b3b3;
+}
+
+.pop:hover {
+  transform: scale(1.05);
 }
 
 svg:hover {
@@ -12017,7 +12038,11 @@ svg:hover {
 }
 
 #src-library {
-  width: 80%;
+  width: 65%;
+}
+
+#src-library input {
+  font-size: 12px;
 }
 
 input[type=search]:focus {
