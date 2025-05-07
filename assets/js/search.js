@@ -5,7 +5,6 @@ const headers = {
   "x-rapidapi-key": API_KEY,
 };
 
-// Lista di tutti gli ID di genere Deezer
 const genreIds = [0, 132, 152, 113, 165, 106, 85, 98, 116, 144, 129, 146, 1069, 1292, 1293, 1297];
 
 const searchInput = document.getElementById("search-input");
@@ -14,20 +13,16 @@ const resultsContainer = document.getElementById("search-results");
 const audioPlayer = document.getElementById("audio-player");
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Carica subito tutti i generi
   fetchAllGenres();
 
-  // Imposta la ricerca live
   searchInput.addEventListener("input", async () => {
     const q = searchInput.value.trim();
     if (!q) {
-      // reset: mostra generi
       resultsContainer.innerHTML = "";
       genresContainer.style.display = "flex";
       return;
     }
 
-    // nascondi generi e mostra loader
     genresContainer.style.display = "none";
     resultsContainer.innerHTML = "<p>Caricamento risultati…</p>";
 
@@ -43,9 +38,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-/**
- * Fetch parallelo di tutti i generi via RapidAPI (/genre/{id})
- */
+/** Fetch parallelo di tutti i generi via API */
 async function fetchAllGenres() {
   const calls = genreIds.map((id) =>
     fetch(`https://${API_HOST}/genre/${id}`, { method: "GET", headers }).then((r) => {
@@ -63,10 +56,7 @@ async function fetchAllGenres() {
   }
 }
 
-/**
- * Crea le card dei generi dentro #genres-container
- * @param {Array} genres
- */
+/** Creazione delle card dei generi con immagine e background dinamico */
 function displayGenres(genres) {
   genresContainer.innerHTML = "";
   genres.forEach((genre) => {
@@ -74,22 +64,44 @@ function displayGenres(genres) {
     if (!name || !picture) return;
 
     const card = document.createElement("div");
-    card.className = "card m-2 bg-secondary text-white";
+    card.className = "card text-white";
     card.style.width = "200px";
-    card.innerHTML = `
-      <img src="${picture}" class="card-img-top" alt="${name}">
-      <div class="card-body">
-        <h5 class="card-title text-center">${name}</h5>
-      </div>
-    `;
+
+    const img = document.createElement("img");
+    img.src = picture;
+    img.className = "card-img-top";
+    img.alt = name;
+
+    const title = document.createElement("h5");
+    title.className = "card-title";
+    title.innerText = name;
+
+    card.appendChild(img);
+    card.appendChild(title);
     genresContainer.appendChild(card);
+
+    setCardBackground(card, img);
   });
 }
 
-/**
- * Mostra i risultati della ricerca
- * @param {Array} tracks
- */
+/** Estrazione colore dominante e applicazione al background della card */
+function setCardBackground(card, img) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  img.onload = function () {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    const pixelData = ctx.getImageData(img.width / 2, img.height / 2, 1, 1).data;
+    const dominantColor = `rgb(${pixelData[0]}, ${pixelData[1]}, ${pixelData[2]})`;
+
+    card.style.backgroundColor = dominantColor;
+  };
+}
+
+/** Mostra i risultati della ricerca */
 function renderSearchResults(tracks) {
   resultsContainer.innerHTML = "";
   if (!tracks.length) {
