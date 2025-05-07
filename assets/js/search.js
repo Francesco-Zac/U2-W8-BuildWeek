@@ -5,40 +5,45 @@ const headers = {
   "x-rapidapi-key": API_KEY,
 };
 
-const genreIds = [0, 132, 152, 113, 165, 106, 85, 98, 116, 144, 129, 146, 1069, 1292, 1293, 1297];
+// Lista di genreId da caricare
+const genreIds = [132, 152, 113, 165, 106, 85, 98, 116, 144, 129, 146, 1069, 1292, 1293, 1297];
 
+// Riferimenti al DOM
 const searchInput = document.getElementById("search-input");
 const genresContainer = document.getElementById("genres-container");
 const resultsContainer = document.getElementById("search-results");
 const audioPlayer = document.getElementById("audio-player");
 
+// Mappa genere → playlist (aggiorna con i tuoi ID reali)
+const playIds = {
+  132: 123456,
+  152: 908622995,
+  113: 987654,
+  165: 345678,
+};
+
 window.addEventListener("DOMContentLoaded", () => {
   fetchAllGenres();
 
-  searchInput.addEventListener("input", async () => {
-    const q = searchInput.value.trim();
-    if (!q) {
-      resultsContainer.innerHTML = "";
-      genresContainer.style.display = "flex";
+  // Delegated click sulle card dei generi
+  genresContainer.addEventListener("click", (ev) => {
+    const card = ev.target.closest(".card");
+    if (!card) return;
+
+    const genreId = card.dataset.id;
+    const playlistId = playIds[genreId];
+    if (!playlistId) {
+      alert("Nessuna playlist associata a questo genere.");
       return;
     }
 
-    genresContainer.style.display = "none";
-    resultsContainer.innerHTML = "<p>Caricamento risultati…</p>";
-
-    try {
-      const resp = await fetch(`https://${API_HOST}/search?q=${encodeURIComponent(q)}`, { method: "GET", headers });
-      if (!resp.ok) throw new Error(resp.status);
-      const json = await resp.json();
-      renderSearchResults(json.data || []);
-    } catch (err) {
-      resultsContainer.innerHTML = "<p>Errore nel caricamento.</p>";
-      console.error(err);
-    }
+    window.location.href = `playlist.html?genre=${genreId}&playlist=${playlistId}`;
   });
 });
 
-/** Fetch parallelo di tutti i generi via API */
+/**
+ * Fetch parallelo di tutti i generi via API
+ */
 async function fetchAllGenres() {
   const calls = genreIds.map((id) =>
     fetch(`https://${API_HOST}/genre/${id}`, { method: "GET", headers }).then((r) => {
@@ -56,19 +61,24 @@ async function fetchAllGenres() {
   }
 }
 
-/** Creazione delle card dei generi con immagine e background dinamico */
+/**
+ * Crea le card con ID
+ */
 function displayGenres(genres) {
   genresContainer.innerHTML = "";
+
   genres.forEach((genre) => {
-    const { name, picture } = genre;
-    if (!name || !picture) return;
+    const { id, name, picture_medium } = genre;
+    if (!id || !name || !picture_medium) return;
 
     const card = document.createElement("div");
     card.className = "card text-white";
     card.style.width = "200px";
+    card.dataset.id = id;
 
     const img = document.createElement("img");
-    img.src = picture;
+    img.crossOrigin = "anonymous";
+    img.src = picture_medium;
     img.className = "card-img-top";
     img.alt = name;
 
@@ -84,24 +94,26 @@ function displayGenres(genres) {
   });
 }
 
-/** Estrazione colore dominante e applicazione al background della card */
+/**
+ * Estrae un colore dominante dall'immagine per fare uno sfondo dinamico
+ */
 function setCardBackground(card, img) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
-  img.onload = function () {
+  img.onload = () => {
     canvas.width = img.width;
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0, img.width, img.height);
 
-    const pixelData = ctx.getImageData(img.width / 2, img.height / 2, 1, 1).data;
-    const dominantColor = `rgb(${pixelData[0]}, ${pixelData[1]}, ${pixelData[2]})`;
-
-    card.style.backgroundColor = dominantColor;
+    const [r, g, b] = ctx.getImageData(img.width / 2, img.height / 2, 1, 1).data;
+    card.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
   };
 }
 
-/** Mostra i risultati della ricerca */
+/**
+ * Mostra i risultati di ricerca
+ */
 function renderSearchResults(tracks) {
   resultsContainer.innerHTML = "";
   if (!tracks.length) {
@@ -129,30 +141,4 @@ function renderSearchResults(tracks) {
 
     resultsContainer.appendChild(item);
   });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const genresContainer = document.getElementById("genres-container");
-
-  genresContainer.addEventListener("click", (event) => {
-    const card = event.target.closest(".card");
-    if (!card) return;
-
-    const genreId = card.dataset.id;
-    const playlistId = getPlaylistIdForGenre(genreId); // Ottieni l'ID della playlist
-
-    window.location.href = `playlist.html?genre=${genreId}&playlist=${playlistId}`;
-  });
-});
-
-// Mappa dei generi con ID delle playlist corrispondenti (aggiorna con dati reali)
-const playIds = {
-  132: 123456, // Pop → ID playlist
-  152: 654321, // Rock → ID playlist
-  113: 987654, // Jazz → ID playlist
-  165: 345678, // Classica → ID playlist
-};
-
-function getPlaylistIdForGenre(genreId) {
-  return playIds[genreId] || null; // Restituisce l'ID della playlist o null se non trovato
 }
