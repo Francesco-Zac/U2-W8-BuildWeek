@@ -130,3 +130,29 @@ function renderSearchResults(tracks) {
     resultsContainer.appendChild(item);
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const genresContainer = document.getElementById("genres-container");
+
+  genresContainer.addEventListener("click", (event) => {
+    const card = event.target.closest(".card");
+    if (!card) return;
+
+    const genreId = card.dataset.id;
+    const playlistId = getPlaylistIdForGenre(genreId); // Ottieni l'ID della playlist
+
+    window.location.href = `playlist.html?genre=${genreId}&playlist=${playlistId}`;
+  });
+});
+
+// Mappa dei generi con ID delle playlist corrispondenti (aggiorna con dati reali)
+const playIds = {
+  132: 123456, // Pop → ID playlist
+  152: 654321, // Rock → ID playlist
+  113: 987654, // Jazz → ID playlist
+  165: 345678, // Classica → ID playlist
+};
+
+function getPlaylistIdForGenre(genreId) {
+  return playIds[genreId] || null; // Restituisce l'ID della playlist o null se non trovato
+}
