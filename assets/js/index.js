@@ -108,7 +108,7 @@ async function initArtistPage() {
   const volumeBar = document.getElementById("volume-bar");
   const volumeBtn = document.getElementById("volume-btn");
 
-  // 1) Aggiorna la barra di avanzamento mentre il brano scorre
+  // 1) Aggiorna la barra di avanzamento
   audio.addEventListener("loadedmetadata", () => {
     const dur = audio.duration;
     trackMax.textContent = formatTime(dur);
@@ -193,6 +193,162 @@ async function initArtistPage() {
       isPlaying = false;
       updatePlayIcon();
     });
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const artistQuery = params.get("artist")?.trim() || "Sfera Ebbasta";
+
+  try {
+    const url = `${API_URL}?q=artist:"${encodeURIComponent(artistQuery)}"&limit=10`;
+    const res = await fetch(url, { method: "GET", headers: API_HEADERS });
+    let artistData;
+
+    if (!res.ok) {
+      artistData = sampleData;
+    } else {
+      const json = await res.json();
+      const data = json.data || [];
+      if (data.length === 0) {
+        artistData = sampleData;
+      } else {
+        const artist = data[0].artist;
+        artistData = {
+          name: artist.name,
+          picture: artist.picture_xl || artist.picture_big,
+          listeners: formatNumber(Math.floor(Math.random() * 10000000)),
+          tracks: data.map((t) => ({
+            title: t.title,
+            plays: formatNumber(Math.floor(Math.random() * 20000000)),
+            duration: formatDuration(t.duration),
+            explicit: Math.random() > 0.5,
+            preview: t.preview,
+          })),
+          playlists: [
+            {
+              title: artist.name + " Radio",
+              description: "Playlist",
+              image: artist.picture_medium,
+            },
+          ],
+        };
+      }
+    }
+
+    renderArtistData(artistData);
+  } catch (err) {
+    console.error(err);
+    renderArtistData(sampleData);
+  }
+}
+
+function renderArtistData(artistData) {
+  currentArtistData = artistData;
+  playlistTracks = artistData.tracks.slice();
+  currentIndex = 0;
+
+  // banner & meta
+  document.getElementById("banner").style.backgroundImage = `url('${artistData.picture}')`;
+  document.getElementById("artist-name").textContent = artistData.name;
+  document.getElementById("monthly-listeners").textContent = artistData.listeners;
+
+  document.getElementById("play-all").onclick = () => {
+    if (!playlistTracks.length) return;
+    currentIndex = 0;
+    playCurrent();
+  };
+
+  renderPopularTracks(playlistTracks);
+  renderArtistSelection(artistData.playlists);
+
+  //Player UI
+  updatePlayerInfo();
+}
+
+function renderPopularTracks(tracks) {
+  const container = document.getElementById("popular-tracks");
+  container.innerHTML = "";
+  tracks.forEach((track, idx) => {
+    const item = document.createElement("div");
+    item.className = "track-item";
+    item.innerHTML = `
+      <div class="track-number">${idx + 1}</div>
+      <div class="track-info">
+        <span class="track-title">
+          ${track.title}${track.explicit ? '<span class="explicit-label">E</span>' : ""}
+        </span>
+      </div>
+      <div class="track-plays">${track.plays}</div>
+      <div class="track-duration">${track.duration}</div>
+    `;
+    item.addEventListener("click", () => {
+      currentIndex = idx;
+      playCurrent();
+    });
+    container.appendChild(item);
+  });
+}
+
+function renderArtistSelection(playlists) {
+  const container = document.getElementById("artist-selection");
+  container.innerHTML = "";
+  playlists.forEach((pl) => {
+    const card = document.createElement("div");
+    card.className = "playlist-card";
+    card.innerHTML = `
+      <div class="playlist-image" style="background-image: url('${pl.image}')"></div>
+      <div class="playlist-title">${pl.title}</div>
+      <div class="playlist-description">${pl.description}</div>
+    `;
+    card.onclick = () => alert(`Apri playlist: ${pl.title}`);
+    container.appendChild(card);
+  });
+}
+
+function togglePlay() {
+  if (!audio || !playlistTracks.length) return;
+
+  if (audio.src && !audio.src.endsWith("undefined")) {
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+  } else {
+    playCurrent();
+  }
+}
+
+function playCurrent() {
+  if (!currentArtistData || !audio || !playlistTracks.length) return;
+
+  const track = playlistTracks[currentIndex];
+  if (!track || !track.preview) {
+    console.error("Invalid track or preview URL");
+    return;
+  }
+
+  audio.src = track.preview;
+  audio.play().catch((err) => {
+    console.error("Failed to play track:", err);
+  });
+
+  updatePlayerInfo();
+}
+
+function updatePlayerInfo() {
+  if (!playlistTracks.length) return;
+
+  const track = playlistTracks[currentIndex];
+  if (!track) return;
+
+  const playTitle = document.getElementById("play-title");
+  const playArtist = document.getElementById("play-artist");
+  const playerImage = document.getElementById("navbar-player-img");
+
+  if (playTitle) playTitle.textContent = track.title;
+  if (playArtist) playArtist.textContent = currentArtistData.name;
+  if (playerImage && currentArtistData.picture) {
+    playerImage.src = currentArtistData.picture + "?t=" + Date.now();
   }
 }
 
@@ -324,10 +480,17 @@ async function loadPopularAlbums() {
 function createTrackCard(track) {
   const item = document.createElement("div");
   item.className = "track-item";
+
   item.addEventListener("click", () => {
     if (track.preview && audioPlayer.src !== track.preview) {
       audioPlayer.src = track.preview;
       audioPlayer.play();
+
+      const playerImg = document.getElementById("navbar-player-img");
+      if (playerImg) {
+        const coverUrl = track.album.cover_medium || "./assets/img/image-2.jpg";
+        playerImg.src = coverUrl + "?t=" + Date.now();
+      }
     }
   });
 
@@ -366,6 +529,7 @@ function createTrackCard(track) {
 
   info.append(title, artistName);
   item.appendChild(info);
+
   return item;
 }
 
