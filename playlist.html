@@ -6,10 +6,19 @@
     <title>Playlist Deezer</title>
     <link rel="stylesheet" href="./assets/style/playlist.css" />
   </head>
-  <body class="bg-dark text-white">
+  <body>
     <div class="container">
-      <h2 id="genre-title">Playlist per il genere:</h2>
-      <div id="playlists-container" class="grid-container"></div>
+      <div class="playlist-banner" id="playlist-banner">
+        <h2 class="playlist-title" id="playlist-title">Nome Playlist</h2>
+      </div>
+
+      <div class="playlist-controls">
+        <button class="play-btn" id="play-btn">▶ Play</button>
+        <button class="follow-btn" id="follow-btn">Segui</button>
+        <button class="options-btn" id="options-btn">⋮</button>
+      </div>
+
+      <ul class="track-list" id="track-list"></ul>
     </div>
 
     <script src="./assets/js/playlistgenre.js"></script>

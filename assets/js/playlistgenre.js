@@ -5,77 +5,58 @@ const headers = {
   "x-rapidapi-key": API_KEY,
 };
 
-const playlistsContainer = document.getElementById("playlists-container");
-const genreTitle = document.getElementById("genre-title");
+// Selezione degli elementi HTML
+const playlistBanner = document.getElementById("playlist-banner");
+const playlistTitle = document.getElementById("playlist-title");
+const playBtn = document.getElementById("play-btn");
+const trackList = document.getElementById("track-list");
 
-// Recupera il genere e la playlist dalla query string
+// Recupero parametri dall'URL
 const urlParams = new URLSearchParams(window.location.search);
-const genreId = urlParams.get("genre");
 const playlistId = urlParams.get("playlist");
 
-// Se è presente il genre, carico nome genere e playlist
-if (genreId) {
-  fetchGenreName(genreId);
+// Se è presente il playlistId, carico i dettagli della playlist
+if (playlistId) {
   fetchPlaylistDetails(playlistId);
 } else {
-  genreTitle.innerText = "Genere non specificato";
-}
-
-// Funzione per ottenere e mostrare il nome del genere
-async function fetchGenreName(genreId) {
-  try {
-    const resp = await fetch(`https://${API_HOST}/genre/${genreId}`, {
-      method: "GET",
-      headers,
-    });
-    if (!resp.ok) throw new Error(`Errore HTTP: ${resp.status}`);
-    const data = await resp.json();
-    genreTitle.innerText = `Playlist per il genere: ${data.name}`;
-  } catch (err) {
-    console.error("Errore nel recupero del nome del genere:", err);
-    genreTitle.innerText = "Impossibile recuperare il nome del genere.";
-  }
+  playlistTitle.innerText = "Playlist non specificata";
 }
 
 // Funzione per ottenere e mostrare i dettagli della playlist
 async function fetchPlaylistDetails(playlistId) {
-  if (!playlistId) {
-    playlistsContainer.innerHTML = "<p>Playlist non specificata.</p>";
-    return;
-  }
-
   try {
     const res = await fetch(`https://${API_HOST}/playlist/${playlistId}`, { method: "GET", headers });
     if (!res.ok) throw new Error(`Errore HTTP: ${res.status}`);
     const playlistData = await res.json();
-    console.log("playlistData =", playlistData);
 
-    const tracksArray = playlistData.tracks?.data || [];
-    displayPlaylist(playlistData, tracksArray);
+    // Aggiorno l'immagine di sfondo e il titolo della playlist
+    playlistBanner.style.backgroundImage = `url(${playlistData.picture_xl})`;
+    playlistTitle.innerText = playlistData.title;
+
+    // La funzione del bottone Play può essere definita separatamente
+    playBtn.onclick = () => {
+      console.log("Play button clicked! Aggiungi funzionalità qui.");
+    };
+
+    // Genero la lista delle tracce
+    displayTrackList(playlistData.tracks.data);
   } catch (error) {
     console.error("Errore nel caricamento della playlist:", error);
-    playlistsContainer.innerHTML = "<p>Errore nel caricamento della playlist.</p>";
+    playlistTitle.innerText = "Errore nel caricamento della playlist.";
   }
 }
 
-// Funzione per renderizzare la playlist e le tracce nella pagina
-function displayPlaylist(playlist, tracks) {
-  let html = "<ul>";
-  if (tracks.length) {
-    tracks.forEach((t) => {
-      html += `<li>${t.artist.name} – ${t.title}</li>`;
-    });
-  } else {
-    html += "<li>Nessuna traccia disponibile in questa playlist.</li>";
+// Funzione per creare la lista delle tracce
+function displayTrackList(tracks) {
+  trackList.innerHTML = ""; // Pulisce la lista esistente
+  if (tracks.length === 0) {
+    trackList.innerHTML = "<li>Nessuna traccia disponibile.</li>";
+    return;
   }
-  html += "</ul>";
 
-  playlistsContainer.innerHTML = `
-    <div class="playlist-details">
-      <h3>${playlist.title}</h3>
-      <img src="${playlist.picture_medium}" alt="${playlist.title}">
-      <h4>Lista delle tracce:</h4>
-      ${html}
-    </div>
-  `;
+  tracks.forEach((t, index) => {
+    const trackItem = document.createElement("li");
+    trackItem.innerHTML = `<span>${index + 1}.</span> ${t.artist.name} – ${t.title}`;
+    trackList.appendChild(trackItem);
+  });
 }
