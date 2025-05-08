@@ -23,6 +23,7 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  max-width: 1200px; /* Limita la larghezza su schermi grandi */
 }
 
 .playlist-banner {
@@ -101,4 +102,49 @@ body {
 .track-list li span {
   font-weight: bold;
   margin-right: 10px;
+}
+
+/* Responsività per dispositivi medi (tablet) */
+@media (max-width: 1024px) {
+  .playlist-title {
+    font-size: 2.5em;
+  }
+
+  .play-btn,
+  .follow-btn,
+  .options-btn {
+    font-size: 1em;
+    padding: 8px 16px;
+  }
+
+  .track-list li {
+    font-size: 1em;
+  }
+}
+
+/* Responsività per dispositivi piccoli (smartphone) */
+@media (max-width: 768px) {
+  .playlist-banner {
+    height: 60vh;
+  }
+
+  .playlist-title {
+    font-size: 2em;
+    left: 10px;
+    bottom: 20px;
+  }
+
+  .playlist-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .track-list {
+    width: 95%;
+  }
+
+  .track-list li {
+    flex-direction: column;
+    text-align: center;
+  }
 }
