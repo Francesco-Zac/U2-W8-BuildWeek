@@ -87,14 +87,145 @@ const sampleData = {
   ],
 };
 
-let audioPlayer;
+let audio;
+let currentArtistData = null;
+let playlistTracks = [];
+let currentIndex = 0;
+let isPlaying = false;
 
-// Al caricamento della pagina, inizializziamo il player e facciamo le tre chiamate
+window.addEventListener("DOMContentLoaded", initArtistPage);
+
+async function initArtistPage() {
+  audio = document.getElementById("audio-player");
+
+  // Riferimenti
+  const progressContainer = document.getElementById("progress-container");
+  const trackBar = document.getElementById("track-bar");
+  const trackTime = document.getElementById("track-time");
+  const trackMax = document.getElementById("track-max");
+
+  const volumeContainer = document.getElementById("volume-container");
+  const volumeBar = document.getElementById("volume-bar");
+  const volumeBtn = document.getElementById("volume-btn");
+
+  // 1) Aggiorna la barra di avanzamento mentre il brano scorre
+  audio.addEventListener("loadedmetadata", () => {
+    const dur = audio.duration;
+    trackMax.textContent = formatTime(dur);
+  });
+  audio.addEventListener("timeupdate", () => {
+    const cur = audio.currentTime;
+    const percent = (cur / audio.duration) * 100;
+    trackBar.style.width = percent + "%";
+    trackTime.textContent = formatTime(cur);
+  });
+
+  // 2) Click sul contenitore per fare seek
+  progressContainer.addEventListener("click", (e) => {
+    const rect = progressContainer.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
+    const newTime = (clickX / width) * audio.duration;
+    audio.currentTime = newTime;
+  });
+
+  // 3) Inizializza volume
+  audio.volume = 0.25;
+
+  // 4) Click sul volume-container per cambiare volume
+  volumeContainer.addEventListener("click", (e) => {
+    const rect = volumeContainer.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
+    const newVol = clickX / width;
+    audio.volume = newVol;
+    volumeBar.style.width = newVol * 100 + "%";
+  });
+
+  // 5) Pulsante mute/unmute
+  let lastVolume = audio.volume;
+  volumeBtn.addEventListener("click", () => {
+    if (audio.volume > 0) {
+      lastVolume = audio.volume;
+      audio.volume = 0;
+      volumeBar.style.width = "0%";
+    } else {
+      audio.volume = lastVolume;
+      volumeBar.style.width = lastVolume * 100 + "%";
+    }
+  });
+
+  // Funzione di utilità per formattare mm:ss
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60)
+      .toString()
+      .padStart(1, "0");
+    const s = Math.floor(sec % 60)
+      .toString()
+      .padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  // Bind all player controls
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+  const shuffleBtn = document.getElementById("shuffle-btn");
+  const playBtn = document.getElementById("play-btn");
+
+  if (prevBtn) prevBtn.addEventListener("click", prevTrack);
+  if (nextBtn) nextBtn.addEventListener("click", nextTrack);
+  if (shuffleBtn) shuffleBtn.addEventListener("click", shuffleTrack);
+  if (playBtn) playBtn.addEventListener("click", togglePlay);
+
+  if (audio) {
+    audio.addEventListener("ended", () => {
+      isPlaying = false;
+      updatePlayIcon();
+      nextTrack();
+    });
+
+    audio.addEventListener("play", () => {
+      isPlaying = true;
+      updatePlayIcon();
+    });
+
+    audio.addEventListener("pause", () => {
+      isPlaying = false;
+      updatePlayIcon();
+    });
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
+  // 1) inizializzo il player e carico i dati
   audioPlayer = document.getElementById("audio-player");
   loadTrendingTracks();
   loadPopularArtists();
   loadPopularAlbums();
+
+  // 2) setup del play/pausa nella navbar bottom
+  const playBtn = document.getElementById("play-btn");
+  const playIcon = playBtn.querySelector(".bi-play-circle-fill");
+  const pauseIcon = playBtn.querySelector(".bi-pause-circle-fill");
+
+  playBtn.addEventListener("click", () => {
+    if (!audioPlayer.src) return;
+
+    if (audioPlayer.paused) {
+      audioPlayer.play();
+      playIcon.classList.add("d-none");
+      pauseIcon.classList.remove("d-none");
+    } else {
+      audioPlayer.pause();
+      pauseIcon.classList.add("d-none");
+      playIcon.classList.remove("d-none");
+    }
+  });
+
+  audioPlayer.addEventListener("ended", () => {
+    pauseIcon.classList.add("d-none");
+    playIcon.classList.remove("d-none");
+  });
 });
 
 // +++ 1) Brani di tendenza +++
