@@ -14,12 +14,16 @@ body {
 }
 
 /* Navbar */
-.navbar {
+#navbar-bottom {
   background-color: rgba(0, 0, 0, 0.6);
   padding: 16px 24px;
-  position: sticky;
-  top: 0;
+
+  bottom: 0;
   z-index: 100;
+}
+
+body {
+  scrollbar-color: #f301c7 !important;
 }
 
 .search-input {
