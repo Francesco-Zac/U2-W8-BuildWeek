@@ -292,3 +292,8 @@ body {
   border-radius: 2px;
   margin-left: 8px;
 }
+
+#center {
+  scrollbar-color: rgb(211 214 211 / 35%) #e8070700;
+  scrollbar-width: thin;
+}

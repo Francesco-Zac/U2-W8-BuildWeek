@@ -52,7 +52,7 @@ body {
   margin-top: 20px;
 }
 
-.play-btn,
+.play-btn2,
 .follow-btn,
 .options-btn {
   padding: 10px 20px;
@@ -63,7 +63,7 @@ body {
   border-radius: 30px;
 }
 
-.play-btn {
+.play-btn2 {
   background-color: #1db954;
 }
 
@@ -97,11 +97,25 @@ body {
   padding: 10px;
   font-size: 1.2em;
   border-bottom: 1px solid #444;
+  cursor: pointer;
+}
+
+.track-list li:hover {
+  background-color: #282828;
 }
 
 .track-list li span {
   font-weight: bold;
   margin-right: 10px;
+}
+
+.progress {
+  cursor: pointer;
+}
+
+#center {
+  scrollbar-color: rgb(211 214 211 / 35%) #e8070700;
+  scrollbar-width: thin;
 }
 
 /* Responsività per dispositivi medi (tablet) */
