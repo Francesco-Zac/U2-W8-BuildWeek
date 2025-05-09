@@ -1,0 +1,209 @@
+@import "./partials/bootstrap-overrides.scss";
+
+aside {
+  background-color: #121212;
+  color: white;
+  height: 100%;
+  overflow-x: hidden;
+  border-radius: 15px;
+}
+.bg-new {
+  background-color: #292929 !important;
+}
+.text-new {
+  color: #b3b3b3 !important;
+}
+#install-btn:hover {
+  svg {
+    fill: white !important;
+  }
+  div {
+    color: white !important;
+  }
+}
+.mark:hover {
+  background-color: #424242 !important;
+}
+.search-nav-focus {
+  border: 2px solid white;
+}
+.nav-btn {
+  width: 48px;
+  height: 48px;
+  background-color: #292929 !important;
+}
+.nav-btn:hover {
+  width: 48px;
+  height: 48px;
+  background-color: #424242 !important;
+  svg {
+    fill: white;
+  }
+}
+#src-nav-form {
+  width: 310px;
+}
+
+#searchbar {
+  background-color: #292929;
+}
+#playlist,
+#frend {
+  overflow: auto;
+  height: 100vh;
+}
+svg {
+  width: 1rem;
+  fill: #b3b3b3;
+}
+.pop:hover {
+  transform: scale(1.05);
+}
+
+svg:hover {
+  transform: scale(1.05);
+  fill: white;
+}
+#src-library {
+  width: 65%;
+}
+#src-library input {
+  font-size: 12px;
+}
+input[type="search"]:focus {
+  box-shadow: none;
+}
+.library-card:hover {
+  background-color: #424242;
+  .card-play {
+    opacity: 100;
+  }
+}
+
+#track-time,
+#track-max {
+  font-size: 12px;
+}
+#play-title {
+  font-size: 19px;
+}
+#play-artist {
+  font-size: 1rem;
+}
+#play-title:hover,
+#play-artist:hover {
+  text-decoration-color: white !important;
+}
+
+.svgFill {
+  fill: #1ed760 !important;
+}
+
+.e-9890-logo:hover {
+  transform: unset;
+}
+.card-play {
+  opacity: 0;
+}
+
+.slide-right {
+  animation: slide-right 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.plus-left:hover {
+  transform: rotateZ(45deg);
+}
+
+#nav-mobile {
+  background-color: #000000b9;
+}
+#mobile-player {
+  background-color: #777676c0;
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(-30px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+@media screen and (max-width: 646px) {
+  #src-nav-form {
+    width: 200px;
+  }
+}
+@media screen and (max-width: 768px) {
+  #left-close,
+  #left-open,
+  #b-nav-icon,
+  #play-img,
+  #time-div,
+  .disapear {
+    display: none !important;
+  }
+  #navbar-bottom {
+    width: 100%;
+    background-color: #12121200 !important;
+    padding: 0 !important;
+  }
+  #play-text-media {
+    flex-direction: row !important;
+  }
+  #play-title,
+  #play-artist {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+  }
+  #play-btn {
+    padding-bottom: 5px;
+  }
+
+  #play-artist {
+    margin-left: 5px;
+  }
+  #play-title::after {
+    content: "•";
+  }
+  #mobile-centering {
+    justify-content: end !important;
+  }
+  .col-mobile {
+    flex: 0 0 auto !important;
+    width: auto !important;
+  }
+  #heart-btn svg,
+  #heart-btn-full svg {
+    width: 24px;
+  }
+  #space-heart {
+    margin-left: auto !important;
+  }
+  #grower {
+    flex-grow: 1 !important;
+  }
+  #notify-2 {
+    top: 5px;
+    right: 10px;
+    svg {
+      fill: white !important;
+    }
+  }
+}
+@media screen and (min-width: 768px) {
+  #notify-2 {
+    display: none;
+  }
+  #navbar-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+  }
+  #mobile-icon {
+    display: none;
+  }
+}

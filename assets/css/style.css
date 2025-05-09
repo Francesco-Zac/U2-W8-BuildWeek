@@ -11969,6 +11969,8 @@ aside {
   background-color: #121212;
   color: white;
   height: 100%;
+  overflow-x: hidden;
+  border-radius: 15px;
 }
 
 .bg-new {
@@ -12052,6 +12054,9 @@ input[type=search]:focus {
 .library-card:hover {
   background-color: #424242;
 }
+.library-card:hover .card-play {
+  opacity: 100;
+}
 
 #track-time,
 #track-max {
@@ -12073,4 +12078,113 @@ input[type=search]:focus {
 
 .svgFill {
   fill: #1ed760 !important;
+}
+
+.e-9890-logo:hover {
+  transform: unset;
+}
+
+.card-play {
+  opacity: 0;
+}
+
+.slide-right {
+  animation: slide-right 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.plus-left:hover {
+  transform: rotateZ(45deg);
+}
+
+#nav-mobile {
+  background-color: rgba(0, 0, 0, 0.7254901961);
+}
+
+#mobile-player {
+  background-color: rgba(119, 118, 118, 0.7529411765);
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(-30px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+@media screen and (max-width: 646px) {
+  #src-nav-form {
+    width: 200px;
+  }
+}
+@media screen and (max-width: 768px) {
+  #left-close,
+  #left-open,
+  #b-nav-icon,
+  #play-img,
+  #time-div,
+  .disapear {
+    display: none !important;
+  }
+  #navbar-bottom {
+    width: 100%;
+    background-color: rgba(18, 18, 18, 0) !important;
+    padding: 0 !important;
+  }
+  #play-text-media {
+    flex-direction: row !important;
+  }
+  #play-title,
+  #play-artist {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+  }
+  #play-btn {
+    padding-bottom: 5px;
+  }
+  #play-artist {
+    margin-left: 5px;
+  }
+  #play-title::after {
+    content: "•";
+  }
+  #mobile-centering {
+    justify-content: end !important;
+  }
+  .col-mobile {
+    flex: 0 0 auto !important;
+    width: auto !important;
+  }
+  #heart-btn svg,
+  #heart-btn-full svg {
+    width: 24px;
+  }
+  #space-heart {
+    margin-left: auto !important;
+  }
+  #grower {
+    flex-grow: 1 !important;
+  }
+  #notify-2 {
+    top: 5px;
+    right: 10px;
+  }
+  #notify-2 svg {
+    fill: white !important;
+  }
+}
+@media screen and (min-width: 768px) {
+  #notify-2 {
+    display: none;
+  }
+  #navbar-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+  }
+  #mobile-icon {
+    display: none;
+  }
 }/*# sourceMappingURL=style.css.map */
