@@ -93,3 +93,26 @@ input[type="search"]:focus {
 .svgFill {
   fill: #1ed760 !important;
 }
+
+@media (max-width: 768px) {
+  #bottoniDx {
+    display: none !important;
+  }
+  #right {
+    display: none;
+  }
+  #center {
+    flex: 0 0 auto;
+    width: 75%;
+  }
+  #left-open {
+    padding: 0;
+  }
+
+  #playlist span {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+}

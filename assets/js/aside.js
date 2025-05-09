@@ -1,3 +1,21 @@
+// chiave usata in localStorage
+const LIKED_KEY = "likedTracks";
+
+// restituisce un array (vuoto se non esiste)
+function getLikedTracks() {
+  const raw = localStorage.getItem(LIKED_KEY);
+  try {
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+// salva l'array in localStorage
+function setLikedTracks(arr) {
+  localStorage.setItem(LIKED_KEY, JSON.stringify(arr));
+}
+
 const pause = document.querySelector(".bi-pause-circle-fill");
 const play = document.querySelector(".bi-play-circle-fill");
 const playBtn = document.getElementById("play-btn");
@@ -137,3 +155,98 @@ const cardGen = function (v, data) {
     frends.appendChild(card);
   }
 };
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = getLikedTracks();
+  saved.forEach((data) => {
+    // ricrea la card in libreria per ogni brano salvato
+    cardGen(true, data);
+  });
+});
+
+const playTitleEl = document.getElementById("play-title");
+const playArtistEl = document.getElementById("play-artist");
+const playerImgEl = document.getElementById("navbar-player-img");
+
+heartBtn.onclick = function (e) {
+  heart.classList.toggle("opacity-0");
+
+  const playTitle = document.getElementById("play-title").textContent;
+  const playArtist = document.getElementById("play-artist").textContent;
+  const cover = document.getElementById("navbar-player-img").src;
+
+  const trackData = {
+    album: { cover_small: cover, title: playArtist },
+    title: playTitle,
+  };
+
+  let liked = getLikedTracks();
+
+  if (!heart.classList.contains("opacity-0")) {
+    if (!liked.some((t) => t.title === trackData.title && t.album.cover_small === cover)) {
+      liked.push(trackData);
+      setLikedTracks(liked);
+      cardGen(true, trackData);
+    }
+  } else {
+    liked = liked.filter((t) => !(t.title === trackData.title && t.album.cover_small === cover));
+    setLikedTracks(liked);
+
+    const playlist = document.getElementById("playlist");
+    Array.from(playlist.children).forEach((li) => {
+      const img = li.querySelector("img");
+      const txt = li.querySelector("span").innerText;
+      if (img && img.src === cover && txt === playTitle) {
+        playlist.removeChild(li);
+      }
+    });
+  }
+};
+
+const followBtn = document.querySelector(".follow-button");
+if (followBtn) {
+  followBtn.addEventListener("click", () => {
+    const artistName = document.getElementById("artist-name").textContent;
+    const bannerUrl = document.getElementById("banner").style.backgroundImage.match(/url\("?(.*?)"?\)/)[1];
+
+    const artistData = {
+      album: { cover_small: bannerUrl, title: artistName },
+      title: artistName,
+    };
+
+    const LIKED_ARTISTS_KEY = "likedArtists";
+    const getLikedArtists = () => {
+      const raw = localStorage.getItem(LIKED_ARTISTS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    };
+    const setLikedArtists = (arr) => localStorage.setItem(LIKED_ARTISTS_KEY, JSON.stringify(arr));
+
+    let likedArtists = getLikedArtists();
+    if (!likedArtists.some((a) => a.title === artistName)) {
+      likedArtists.push(artistData);
+      setLikedArtists(likedArtists);
+      cardGen(true, artistData);
+      followBtn.textContent = "✓ Seguito";
+      followBtn.classList.add("btn-success");
+    } else {
+      likedArtists = likedArtists.filter((a) => a.title !== artistName);
+      setLikedArtists(likedArtists);
+
+      const playlist = document.getElementById("playlist");
+      Array.from(playlist.children).forEach((li) => {
+        const txt = li.querySelector("span").innerText;
+        if (txt === artistName) playlist.removeChild(li);
+      });
+      followBtn.textContent = "Segui";
+      followBtn.classList.remove("btn-success");
+    }
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const likedArtistsRaw = localStorage.getItem("likedArtists");
+  if (likedArtistsRaw) {
+    JSON.parse(likedArtistsRaw).forEach((artistData) => {
+      cardGen(true, artistData);
+    });
+  }
+});
