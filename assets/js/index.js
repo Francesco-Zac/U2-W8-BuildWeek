@@ -491,6 +491,11 @@ function createTrackCard(track) {
         const coverUrl = track.album.cover_medium || "./assets/img/image-2.jpg";
         playerImg.src = coverUrl + "?t=" + Date.now();
       }
+
+      const playTitle = document.getElementById("play-title");
+      const playArtist = document.getElementById("play-artist");
+      playTitle.textContent = track.title;
+      playArtist.textContent = track.artist.name;
     }
   });
 
