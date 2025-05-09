@@ -87,14 +87,301 @@ const sampleData = {
   ],
 };
 
-let audioPlayer;
+let audio;
+let currentArtistData = null;
+let playlistTracks = [];
+let currentIndex = 0;
+let isPlaying = false;
 
-// Al caricamento della pagina, inizializziamo il player e facciamo le tre chiamate
+window.addEventListener("DOMContentLoaded", initArtistPage);
+
+async function initArtistPage() {
+  audio = document.getElementById("audio-player");
+
+  // Riferimenti
+  const progressContainer = document.getElementById("progress-container");
+  const trackBar = document.getElementById("track-bar");
+  const trackTime = document.getElementById("track-time");
+  const trackMax = document.getElementById("track-max");
+
+  const volumeContainer = document.getElementById("volume-container");
+  const volumeBar = document.getElementById("volume-bar");
+  const volumeBtn = document.getElementById("volume-btn");
+
+  // 1) Aggiorna la barra di avanzamento
+  audio.addEventListener("loadedmetadata", () => {
+    const dur = audio.duration;
+    trackMax.textContent = formatTime(dur);
+  });
+  audio.addEventListener("timeupdate", () => {
+    const cur = audio.currentTime;
+    const percent = (cur / audio.duration) * 100;
+    trackBar.style.width = percent + "%";
+    trackTime.textContent = formatTime(cur);
+  });
+
+  // 2) Click sul contenitore per fare seek
+  progressContainer.addEventListener("click", (e) => {
+    const rect = progressContainer.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
+    const newTime = (clickX / width) * audio.duration;
+    audio.currentTime = newTime;
+  });
+
+  // 3) Inizializza volume
+  audio.volume = 0.25;
+
+  // 4) Click sul volume-container per cambiare volume
+  volumeContainer.addEventListener("click", (e) => {
+    const rect = volumeContainer.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
+    const newVol = clickX / width;
+    audio.volume = newVol;
+    volumeBar.style.width = newVol * 100 + "%";
+  });
+
+  // 5) Pulsante mute/unmute
+  let lastVolume = audio.volume;
+  volumeBtn.addEventListener("click", () => {
+    if (audio.volume > 0) {
+      lastVolume = audio.volume;
+      audio.volume = 0;
+      volumeBar.style.width = "0%";
+    } else {
+      audio.volume = lastVolume;
+      volumeBar.style.width = lastVolume * 100 + "%";
+    }
+  });
+
+  // Funzione di utilità per formattare mm:ss
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60)
+      .toString()
+      .padStart(1, "0");
+    const s = Math.floor(sec % 60)
+      .toString()
+      .padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  // Bind all player controls
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+  const shuffleBtn = document.getElementById("shuffle-btn");
+  const playBtn = document.getElementById("play-btn");
+
+  if (prevBtn) prevBtn.addEventListener("click", prevTrack);
+  if (nextBtn) nextBtn.addEventListener("click", nextTrack);
+  if (shuffleBtn) shuffleBtn.addEventListener("click", shuffleTrack);
+  if (playBtn) playBtn.addEventListener("click", togglePlay);
+
+  if (audio) {
+    audio.addEventListener("ended", () => {
+      isPlaying = false;
+      updatePlayIcon();
+      nextTrack();
+    });
+
+    audio.addEventListener("play", () => {
+      isPlaying = true;
+      updatePlayIcon();
+    });
+
+    audio.addEventListener("pause", () => {
+      isPlaying = false;
+      updatePlayIcon();
+    });
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const artistQuery = params.get("artist")?.trim() || "Sfera Ebbasta";
+
+  try {
+    const url = `${API_URL}?q=artist:"${encodeURIComponent(artistQuery)}"&limit=10`;
+    const res = await fetch(url, { method: "GET", headers: API_HEADERS });
+    let artistData;
+
+    if (!res.ok) {
+      artistData = sampleData;
+    } else {
+      const json = await res.json();
+      const data = json.data || [];
+      if (data.length === 0) {
+        artistData = sampleData;
+      } else {
+        const artist = data[0].artist;
+        artistData = {
+          name: artist.name,
+          picture: artist.picture_xl || artist.picture_big,
+          listeners: formatNumber(Math.floor(Math.random() * 10000000)),
+          tracks: data.map((t) => ({
+            title: t.title,
+            plays: formatNumber(Math.floor(Math.random() * 20000000)),
+            duration: formatDuration(t.duration),
+            explicit: Math.random() > 0.5,
+            preview: t.preview,
+          })),
+          playlists: [
+            {
+              title: artist.name + " Radio",
+              description: "Playlist",
+              image: artist.picture_medium,
+            },
+          ],
+        };
+      }
+    }
+
+    renderArtistData(artistData);
+  } catch (err) {
+    console.error(err);
+    renderArtistData(sampleData);
+  }
+}
+
+function renderArtistData(artistData) {
+  currentArtistData = artistData;
+  playlistTracks = artistData.tracks.slice();
+  currentIndex = 0;
+
+  // banner & meta
+  document.getElementById("banner").style.backgroundImage = `url('${artistData.picture}')`;
+  document.getElementById("artist-name").textContent = artistData.name;
+  document.getElementById("monthly-listeners").textContent = artistData.listeners;
+
+  document.getElementById("play-all").onclick = () => {
+    if (!playlistTracks.length) return;
+    currentIndex = 0;
+    playCurrent();
+  };
+
+  renderPopularTracks(playlistTracks);
+  renderArtistSelection(artistData.playlists);
+
+  //Player UI
+  updatePlayerInfo();
+}
+
+function renderPopularTracks(tracks) {
+  const container = document.getElementById("popular-tracks");
+  container.innerHTML = "";
+  tracks.forEach((track, idx) => {
+    const item = document.createElement("div");
+    item.className = "track-item";
+    item.innerHTML = `
+      <div class="track-number">${idx + 1}</div>
+      <div class="track-info">
+        <span class="track-title">
+          ${track.title}${track.explicit ? '<span class="explicit-label">E</span>' : ""}
+        </span>
+      </div>
+      <div class="track-plays">${track.plays}</div>
+      <div class="track-duration">${track.duration}</div>
+    `;
+    item.addEventListener("click", () => {
+      currentIndex = idx;
+      playCurrent();
+    });
+    container.appendChild(item);
+  });
+}
+
+function renderArtistSelection(playlists) {
+  const container = document.getElementById("artist-selection");
+  container.innerHTML = "";
+  playlists.forEach((pl) => {
+    const card = document.createElement("div");
+    card.className = "playlist-card";
+    card.innerHTML = `
+      <div class="playlist-image" style="background-image: url('${pl.image}')"></div>
+      <div class="playlist-title">${pl.title}</div>
+      <div class="playlist-description">${pl.description}</div>
+    `;
+    card.onclick = () => alert(`Apri playlist: ${pl.title}`);
+    container.appendChild(card);
+  });
+}
+
+function togglePlay() {
+  if (!audio || !playlistTracks.length) return;
+
+  if (audio.src && !audio.src.endsWith("undefined")) {
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+  } else {
+    playCurrent();
+  }
+}
+
+function playCurrent() {
+  if (!currentArtistData || !audio || !playlistTracks.length) return;
+
+  const track = playlistTracks[currentIndex];
+  if (!track || !track.preview) {
+    console.error("Invalid track or preview URL");
+    return;
+  }
+
+  audio.src = track.preview;
+  audio.play().catch((err) => {
+    console.error("Failed to play track:", err);
+  });
+
+  updatePlayerInfo();
+}
+
+function updatePlayerInfo() {
+  if (!playlistTracks.length) return;
+
+  const track = playlistTracks[currentIndex];
+  if (!track) return;
+
+  const playTitle = document.getElementById("play-title");
+  const playArtist = document.getElementById("play-artist");
+  const playerImage = document.getElementById("navbar-player-img");
+
+  if (playTitle) playTitle.textContent = track.title;
+  if (playArtist) playArtist.textContent = currentArtistData.name;
+  if (playerImage && currentArtistData.picture) {
+    playerImage.src = currentArtistData.picture + "?t=" + Date.now();
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
+  // 1) inizializzo il player e carico i dati
   audioPlayer = document.getElementById("audio-player");
   loadTrendingTracks();
   loadPopularArtists();
   loadPopularAlbums();
+
+  // 2) setup del play/pausa nella navbar bottom
+  const playBtn = document.getElementById("play-btn");
+  const playIcon = playBtn.querySelector(".bi-play-circle-fill");
+  const pauseIcon = playBtn.querySelector(".bi-pause-circle-fill");
+
+  playBtn.addEventListener("click", () => {
+    if (!audioPlayer.src) return;
+
+    if (audioPlayer.paused) {
+      audioPlayer.play();
+      playIcon.classList.add("d-none");
+      pauseIcon.classList.remove("d-none");
+    } else {
+      audioPlayer.pause();
+      pauseIcon.classList.add("d-none");
+      playIcon.classList.remove("d-none");
+    }
+  });
+
+  audioPlayer.addEventListener("ended", () => {
+    pauseIcon.classList.add("d-none");
+    playIcon.classList.remove("d-none");
+  });
 });
 
 // +++ 1) Brani di tendenza +++
@@ -193,10 +480,22 @@ async function loadPopularAlbums() {
 function createTrackCard(track) {
   const item = document.createElement("div");
   item.className = "track-item";
+
   item.addEventListener("click", () => {
     if (track.preview && audioPlayer.src !== track.preview) {
       audioPlayer.src = track.preview;
       audioPlayer.play();
+
+      const playerImg = document.getElementById("navbar-player-img");
+      if (playerImg) {
+        const coverUrl = track.album.cover_medium || "./assets/img/image-2.jpg";
+        playerImg.src = coverUrl + "?t=" + Date.now();
+      }
+
+      const playTitle = document.getElementById("play-title");
+      const playArtist = document.getElementById("play-artist");
+      playTitle.textContent = track.title;
+      playArtist.textContent = track.artist.name;
     }
   });
 
@@ -235,6 +534,7 @@ function createTrackCard(track) {
 
   info.append(title, artistName);
   item.appendChild(info);
+
   return item;
 }
 

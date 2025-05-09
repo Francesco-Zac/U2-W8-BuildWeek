@@ -15,6 +15,11 @@ a {
   text-decoration: none;
 }
 
+#center {
+  scrollbar-color: rgb(211 214 211 / 35%) #e8070700;
+  scrollbar-width: thin;
+}
+
 /* Navbar */
 .navbar {
   display: flex;
@@ -34,7 +39,7 @@ a {
 
 /* Sezione principale */
 main {
-  padding: 24px 24px 80px; /* bottom padding per non finire sotto il player */
+  padding: 24px 24px 80px;
 }
 
 /* Titolo di striscia */
@@ -61,7 +66,7 @@ main {
   width: 140px;
   margin-right: 16px;
   text-align: center;
-  cursor: pointer; /* mano al passaggio */
+  cursor: pointer;
   transition: transform 0.2s ease;
 }
 .album-item:hover {
@@ -75,7 +80,7 @@ main {
   font-size: 14px;
   margin-top: 8px;
   line-height: 1.2;
-  height: 2.4em; /* due righe */
+  height: 2.4em;
   overflow: hidden;
 }
 .album-item .artist-name {
@@ -84,7 +89,6 @@ main {
   margin-top: 4px;
 }
 
-/* Player audio fisso in basso */
 #player-container {
   position: fixed;
   bottom: 0;
@@ -98,7 +102,6 @@ main {
   width: 100%;
 }
 
-/* Base styles */
 :root {
   --bg-color: #121212;
   --text-color: #ffffff;

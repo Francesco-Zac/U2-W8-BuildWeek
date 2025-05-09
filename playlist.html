@@ -5,10 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="./assets/dist/css/style.min.css" />
-    <link rel="stylesheet" href="./assets/style/index.css" />
+    <link rel="stylesheet" href="./assets/style/playlist.css" />
+    <style>
+      @font-face {
+        font-family: "MyCustomFont";
+        src: url("./fonts/MyCustomFont.ttf");
+      }
 
-    <title>Spotify - Home</title>
-    <audio id="audio-player"></audio>
+      body {
+        font-family: "MyCustomFont", sans-serif;
+      }
+    </style>
+
+    <title>Aside</title>
   </head>
   <body>
     <div class="container-fluid bg-black position-fixed">
@@ -197,32 +206,19 @@
         <!-- COLONNA CENTRALE -->
         <div id="center" class="col-6">
           <main id="main-content" style="max-height: 100vh; overflow-y: auto">
-            <!-- Brani di tendenza -->
-            <section class="content-section">
-              <div class="section-header">
-                <h2 class="section-title">Brani di tendenza</h2>
-                <a href="#" class="view-all">Mostra tutto</a>
+            <div class="container">
+              <div class="playlist-banner" id="playlist-banner">
+                <h2 class="playlist-title" id="playlist-title">Nome Playlist</h2>
               </div>
-              <div class="album-row" id="trending-tracks"></div>
-            </section>
 
-            <!-- Artisti più popolari -->
-            <section class="content-section">
-              <div class="section-header">
-                <h2 class="section-title">Artisti più popolari</h2>
-                <a href="#" class="view-all">Mostra tutto</a>
+              <div class="playlist-controls">
+                <button class="play-btn2" id="play-btn2">▶ Play</button>
+                <button class="follow-btn" id="follow-btn">Segui</button>
+                <button class="options-btn" id="options-btn">⋮</button>
               </div>
-              <div class="album-row" id="popular-artists"></div>
-            </section>
 
-            <!-- Album e singoli popolari -->
-            <section class="content-section">
-              <div class="section-header">
-                <h2 class="section-title">Album e singoli popolari</h2>
-                <a href="#" class="view-all">Mostra tutto</a>
-              </div>
-              <div class="album-row" id="popular-albums"></div>
-            </section>
+              <ul class="track-list" id="track-list"></ul>
+            </div>
           </main>
 
           <!-- Player audio in fondo -->
@@ -249,8 +245,7 @@
       <div class="container-fluid">
         <div class="col-4">
           <div class="d-flex align-items-center gap-2">
-            <div><img id="navbar-player-img" width="55" src="./assets/img/image-2.jpg" alt="Cover brano" /></div>
-
+            <div><img width="55" src="./assets/img/image-2.jpg" alt="" /></div>
             <div class="d-flex flex-column ms-2">
               <a id="play-title" class="link-underline link-underline-opacity-0 link-underline-opacity-100-hover text-white" href="#" style="font-size: 14px">
                 titolo
@@ -280,7 +275,7 @@
                   ></path>
                 </svg>
               </button>
-              <button type="button" id="prev-btn" class="border-0 bg-transparent">
+              <button type="button" class="border-0 bg-transparent">
                 <svg data-encore-id="icon" role="img" aria-hidden="true" class="skip e-9890-icon e-9890-baseline" viewBox="0 0 16 16">
                   <path
                     d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.575a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H1.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h1.6z"
@@ -292,14 +287,14 @@
               <i class="bi bi-play-circle-fill"></i> <i class="bi bi-pause-circle-fill d-none"></i>
             </button>
             <div>
-              <button type="button" id="next-btn" class="border-0 bg-transparent">
+              <button type="button" class="border-0 bg-transparent">
                 <svg data-encore-id="icon" role="img" aria-hidden="true" class="skip e-9890-icon e-9890-baseline" viewBox="0 0 16 16">
                   <path
                     d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-1.6z"
                   ></path>
                 </svg>
               </button>
-              <button type="button" id="shuffle-btn" class="border-0 bg-transparent">
+              <button type="button" class="border-0 bg-transparent">
                 <svg data-encore-id="icon" role="img" aria-hidden="true" class="e-9890-icon e-9890-baseline" viewBox="0 0 16 16">
                   <path
                     d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5a3.75 3.75 0 0 1-3.75 3.75H9.81l1.018 1.018a.75.75 0 1 1-1.06 1.06L6.939 12.75l2.829-2.828a.75.75 0 1 1 1.06 1.06L9.811 12h2.439a2.25 2.25 0 0 0 2.25-2.25v-5a2.25 2.25 0 0 0-2.25-2.25h-8.5A2.25 2.25 0 0 0 1.5 4.75v5A2.25 2.25 0 0 0 3.75 12H5v1.5H3.75A3.75 3.75 0 0 1 0 9.75v-5z"
@@ -308,20 +303,20 @@
               </button>
             </div>
           </div>
-          <!-- Avanzamento brano -->
           <div class="d-flex align-items-center gap-2">
-            <span id="track-time">0:00</span>
+            <span id="track-time">0</span>
             <div
-              id="progress-container"
               class="progress"
               role="progressbar"
+              aria-label="Example 20px high"
+              aria-valuenow="25"
               aria-valuemin="0"
               aria-valuemax="100"
-              style="width: 100%; height: 4px; cursor: pointer"
+              style="width: 100%; height: 4px"
             >
-              <div id="track-bar" class="progress-bar bg-white" style="width: 0%"></div>
+              <div class="progress-bar bg-white" style="width: 25%"></div>
             </div>
-            <span id="track-max">0:00</span>
+            <span id="track-max">4</span>
           </div>
         </div>
         <div class="col-4">
@@ -390,12 +385,13 @@
                 </svg>
               </button>
               <div
-                id="volume-container"
                 class="progress"
                 role="progressbar"
+                aria-label="Example 20px high"
+                aria-valuenow="25"
                 aria-valuemin="0"
                 aria-valuemax="100"
-                style="width: 100%; height: 4px; cursor: pointer"
+                style="width: 100%; height: 4px"
               >
                 <div id="volume-bar" class="progress-bar bg-white" style="width: 25%"></div>
               </div>
@@ -431,6 +427,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="./assets/js/aside.js"></script>
-    <script src="./assets/js/index.js"></script>
+    <script src="./assets/js/playlistgenre.js"></script>
   </body>
 </html>
