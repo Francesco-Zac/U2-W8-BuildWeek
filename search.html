@@ -16,49 +16,6 @@
         font-family: "MyCustomFont", sans-serif;
       }
     </style>
-    <style>
-      @media (max-width: 768px) {
-        #left-open {
-          position: fixed;
-          top: 68px;
-          left: 0;
-          width: 100%;
-          height: calc(100% - 68px);
-          background-color: #121212;
-          z-index: 1040;
-          overflow-y: auto;
-          transition: transform 0.3s ease-in-out;
-          transform: translateX(-100%);
-        }
-
-        #left-open.show {
-          transform: translateX(0);
-        }
-
-        #library-toggler {
-          display: block;
-          position: fixed;
-          top: 20px;
-          left: 20px;
-          z-index: 1050;
-          background-color: transparent;
-          border: none;
-          color: white;
-          font-size: 24px;
-        }
-
-        #center,
-        #right {
-          display: none;
-        }
-      }
-
-      @media (min-width: 769px) {
-        #library-toggler {
-          display: none;
-        }
-      }
-    </style>
 
     <!-- Pulsante per mobile -->
     <button id="library-toggler"><i class="bi bi-list"></i></button>
